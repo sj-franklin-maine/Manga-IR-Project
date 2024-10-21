@@ -12,26 +12,34 @@ def get_random_book(manga109_root_dir):
     books = p.books
     random_book = random.choice(books)
 
+    books.remove('Arisa')
+    books.remove('Count3DeKimeteAgeru')
+    
+
     return random_book
 
 # Pass book and gather all annotations 
 def get_all_images_and_annotations(manga109_root_dir, book):
+    page_num = 22
+
     p = manga109api.Parser(root_dir=manga109_root_dir)
     annotations = p.get_annotation(book=book)
+
+    curr_page = annotations['page'][page_num]
+
     
     image_data = []
 
     # Get the image path and annotations for each page
-    for page_index in range(len(annotations["page"])):
-        img_path = p.img_path(book=book, index=page_index)
-        for annotation_type in ["body", "face", "frame", "text"]:
-            rois = annotations["page"][page_index].get(annotation_type, [])
-            for roi in rois:
-                image_data.append({
-                    "image_path": img_path,
-                    "annotation": annotation_type,
-                    "roi": roi,
-                })
+    img_path = p.img_path(book=book, index=page_num)
+    for annotation_type in ["body", "face", "frame", "text","character"]:
+        rois = annotations["page"][page_num].get(annotation_type, [])
+        for roi in rois:
+            image_data.append({
+                "image_path": img_path,
+                "annotation": annotation_type,
+                "roi": roi,
+            })
     
     return pd.DataFrame(image_data)
 
@@ -45,23 +53,27 @@ def get_characters(book, page_number):
 def get_random_entry():
     book = get_random_book(manga109_root_dir)
     df = get_all_images_and_annotations(manga109_root_dir, book)
-    
-    # Get a random entry from the dataframe
-    random_entry = df.sample(n=1).iloc[0]
+
+    entry = df.iloc[0]
+    img_path = entry["image_path"]
+
+    characters = []
+
+    for index, entry in df.iterrows():
+        if entry["annotation"] == "character":
+            characters.append(entry["roi"])
+
+            
 
     # Get File Path
-    img_path = random_entry["image_path"]
     filename = os.path.basename(img_path)
-
-    # Get Page Number
     page_number, _ = os.path.splitext(filename)
-    annotation_type = random_entry["annotation"]
+
 
     # Get Characters
-    characters = get_characters(book, page_number)
+    #characters = get_characters(book, page_number)
 
-
-    return img_path, page_number, annotation_type, book
+    return img_path, page_number, book
 
 # Testing
-# get_random_entry()
+get_random_entry()

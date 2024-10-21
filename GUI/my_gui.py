@@ -5,7 +5,9 @@ import show_image
 from PIL import ImageTk, Image
 import tkinter.font as tkFont
 
+
 class MyGUI:
+
 
     def __init__(self, root):
         self.root = root
@@ -18,7 +20,7 @@ class MyGUI:
         font = tkFont.Font(family="Times", size=12, weight="bold")
 
         # Get a random entry from the database and Display
-        img_path, page_num, annotation_type, book = show_image.get_random_entry()
+        img_path, page_num, book = show_image.get_random_entry()
         self.display_image(img_path)
 
         # Set the book name and page number
@@ -38,14 +40,14 @@ class MyGUI:
         self.generate_button = tk.Button(self.root, text="Generate", font=font, command=self.generate_image)
         self.generate_button.place(relx=0.5, y=550, anchor="n")
 
-        #self.checkbox_var1 = tk.BooleanVar()
-        #self.checkbox_var2 = tk.BooleanVar()
+        self.checkbox_var1 = tk.BooleanVar()
+        self.checkbox_var2 = tk.BooleanVar()
 
-        #self.checkbox1 = Checkbutton(self.root, text="Option 1", variable=self.checkbox_var1, font=font)
-        #self.checkbox1.place(x=10, y=50)
+        self.checkbox1 = Checkbutton(self.root, text="Option 1", variable=self.checkbox_var1, font=font)
+        self.checkbox1.place(x=10, y=50)
 
-        #self.checkbox2 = Checkbutton(self.root, text="Option 2", variable=self.checkbox_var2, font=font)
-        #self.checkbox2.place(x=10, y=80)
+        self.checkbox2 = Checkbutton(self.root, text="Option 2", variable=self.checkbox_var2, font=font)
+        self.checkbox2.place(x=10, y=80)
 
 
         self.root.mainloop()
@@ -66,6 +68,7 @@ class MyGUI:
         label.pack()
 
     def generate_image(self):
+
         # Clear the existing image
         for widget in self.root.winfo_children():
             if isinstance(widget, Label):
@@ -74,7 +77,7 @@ class MyGUI:
         # Set New Image 
         font = tkFont.Font(family="Times", size=12, weight="bold")
 
-        img_path, page_num, annotation_type, book = show_image.get_random_entry()
+        img_path, page_num, book = show_image.get_random_entry()
 
         self.display_image(img_path)
         self.root.book_label = Label(self.root, text=f"Name: {book}", font=font, padx=10, pady=10, bg="white")
@@ -86,6 +89,11 @@ class MyGUI:
 
         self.generate_button = tk.Button(self.root, text="Generate", font=font, command=self.generate_image)
         self.generate_button.place(relx=0.5, y=550, anchor="n")
+
+            #TODO Add a list of characters in the image
+        characters_font = tkFont.Font(family="Times", size=18, weight="bold", underline=True)
+        self.root.characters_list = Label(self.root, text=f"Characters", font=characters_font, padx=10, pady=10)
+        self.root.characters_list.place(x=1025, y=50)
 
 
 MyGUI(tk.Tk())
