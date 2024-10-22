@@ -14,8 +14,8 @@ def draw_rectangle(img, x0, y0, x1, y1, annotation_type):
 
 if __name__ == "__main__":
     manga109_root_dir = "Manga109/Manga109_released_2023_12_07"
-    book = "ARMS"
-    page_index = 6
+    book = "TsubasaNoKioku"
+    page_index = 22
 
     p = manga109api.Parser(root_dir=manga109_root_dir)
     annotation = p.get_annotation(book=book)
